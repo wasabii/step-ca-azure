@@ -14,16 +14,13 @@ jobs:
     vmImage: 'ubuntu-latest'
   workspace:
     clean: all
-  variables:
-    BuildPlatform: Any CPU
-    BuildConfiguration: Release
   steps:
   - checkout: self
     clean: true
     fetchDepth: 1
 
   - bash: docker image build . -t thr-step-ca
-  - bash: docker image save thr-step-ca | gzip > $(Build.ArtifactStagingDirectory)/thr-step-ca.tar.gz
+  - bash: docker image save thr-step-ca -o $(Build.ArtifactStagingDirectory)/thr-step-ca.tar
 
   - task: PublishBuildArtifacts@1
     inputs:
