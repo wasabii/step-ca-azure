@@ -26,4 +26,4 @@ jobs:
     inputs:
       pathToPublish: $(Build.ArtifactStagingDirectory)
       artifactType: container
-      artifactName: package
+      artifactName: step-ca
