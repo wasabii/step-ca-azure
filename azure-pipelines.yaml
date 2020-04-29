@@ -1,0 +1,21 @@
+trigger:
+  branches:
+    include:
+    - master
+    - develop
+  paths:
+    exclude:
+    - README.md
+    - .gitignore
+
+pool:
+  vmImage: 'windows-2019'
+  
+jobs:
+- job: Publish
+  steps:
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathToPublish: '$(Build.SourcesDirectory)'
+      ArtifactName: package
+      PublishLocation: Container

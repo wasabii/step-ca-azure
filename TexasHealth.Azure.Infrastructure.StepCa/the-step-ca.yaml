@@ -1,0 +1,48 @@
+apiVersion: '2018-10-01'
+type: Microsoft.ContainerInstance/containerGroups
+name: thr-step-ca
+location: eastus
+identity:
+  type: SystemAssigned
+properties:
+  imageRegistryCredentials:
+  - server: cogito.azurecr.io
+    username: cogito
+    password: cKItbGVN17AMPp/wv2EDb1CMvgKoZFYQ
+  containers:
+  - name: thr-step-ca
+    properties:
+      image: cogito.azurecr.io/thr-step-ca:latest
+      environmentVariables:
+      - name: PORT
+        value: 443
+      - name: DNS_NAME
+        value: thr-step-ca.eastus.azurecontainer.io
+      - name: CA_NAME
+        value: Sample CA
+      - name: CA_SECRET_ID
+        value: https://cogito.vault.azure.net/secrets/stepca/df37ccfdb1b9492782ddb06c1fd6d7f0
+      ports:
+      - port: 443
+      resources:
+        requests:
+          cpu: 1.0
+          memoryInGB: 1.5
+      volumeMounts:
+      - name: stepcadb
+        mountPath: /home/step/db
+        readOnly: false
+  osType: Linux
+  restartPolicy: Always
+  ipAddress:
+    type: Public
+    ports:
+      - port: 443
+    dnsNameLabel: thr-step-ca
+  volumes:
+  - name: stepcadb
+    azureFile:
+      storageAccountName: cogitoussc
+      storageAccountKey: 744HAJcZ2Tub5Rr9aN31gfuepwjB+V21WRtqL0Rg6kL18mpnacCQR8QZ7fINkgk38Le26Y4Oxo25ygwjfj4jnA==
+      shareName: stepca
+      readOnly: false
