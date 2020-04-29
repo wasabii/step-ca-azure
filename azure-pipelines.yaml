@@ -19,8 +19,8 @@ jobs:
     clean: true
     fetchDepth: 1
 
-  - bash: docker image build . -t thr-step-ca
-  - bash: docker image save thr-step-ca -o $(Build.ArtifactStagingDirectory)/thr-step-ca.tar
+  - bash: docker image build . -t thr-step-ca:$(Build.BuildNumber)
+  - bash: docker image save thr-step-ca:$(Build.BuildNumber) -o $(Build.ArtifactStagingDirectory)/thr-step-ca.tar
 
   - task: PublishBuildArtifacts@1
     inputs:
