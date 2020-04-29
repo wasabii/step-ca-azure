@@ -7,12 +7,11 @@ trigger:
     exclude:
     - README.md
     - .gitignore
-
-pool:
-  vmImage: 'windows-2019'
   
 jobs:
 - job: Build
+  pool:
+    vmImage: 'ubuntu-latest'
   workspace:
     clean: all
   variables:
@@ -23,18 +22,8 @@ jobs:
     clean: true
     fetchDepth: 1
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: 'restore'
-
-  - task: VSBuild@1
-    inputs:
-      solution: TexasHealth.Azure.Infrastructure.StepCA.sln
-      vsVersion: latest
-      platform: '$(BuildPlatform)'
-      configuration: '$(BuildConfiguration)'
-      maximumCpuCount: true
-      msbuildArchitecture: x64
+  - bash: docker image build . -t thr-step-ca
+  - bash: docker image save thr-step-ca -o $(Build.ArtifactStagingDirectory)/thr-step-ca.tar
 
   - task: PublishBuildArtifacts@1
     inputs:
