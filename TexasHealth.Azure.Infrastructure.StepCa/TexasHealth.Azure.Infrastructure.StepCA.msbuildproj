@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.Build.NoTargets/1.0.94">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+    <None Include="defaults.json" />
+    <None Include="Dockerfile" />
+    <None Include="ca.json" />
+    <None Include="init.sh" />
+  </ItemGroup>
+  <Target Name="DockerBuild" BeforeTargets="GetCopyToOutputDirectoryItems">
+    <Exec Command="docker image build . -t thr-step-ca" />
+    <Exec Command="docker image save thr-step-ca -o $(IntermediateOutputPath)thr-step-ca.tar" />
+    <ItemGroup>
+      <ContentWithTargetPath Include="$(IntermediateOutputPath)thr-step-ca.tar">
+        <TargetPath>thr-step-ca.tar</TargetPath>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </ContentWithTargetPath>
+    </ItemGroup>
+  </Target>
+</Project>

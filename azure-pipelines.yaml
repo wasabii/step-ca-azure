@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-    - master
+    - release
     - develop
   paths:
     exclude:
@@ -12,10 +12,28 @@ pool:
   vmImage: 'windows-2019'
   
 jobs:
-- job: Publish
+- job: Build
+  workspace:
+    clean: all
+  variables:
+    BuildPlatform: Any CPU
+    BuildConfiguration: Release
   steps:
+  - checkout: self
+    clean: true
+    fetchDepth: 1
+
+  - task: VSBuild@1
+    inputs:
+      solution: TexasHealth.Azure.Infrastructure.StepCa.sln
+      vsVersion: latest
+      platform: '$(BuildPlatform)'
+      configuration: '$(BuildConfiguration)'
+      maximumCpuCount: true
+      msbuildArchitecture: x64
+
   - task: PublishBuildArtifacts@1
     inputs:
-      PathToPublish: '$(Build.SourcesDirectory)'
-      ArtifactName: package
-      PublishLocation: Container
+      pathToPublish: $(Build.ArtifactStagingDirectory)
+      artifactType: container
+      artifactName: package
