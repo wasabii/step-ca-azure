@@ -23,7 +23,7 @@ jobs:
     fetchDepth: 1
 
   - bash: docker image build . -t thr-step-ca
-  - bash: docker image save thr-step-ca -o - | gzip > $(Build.ArtifactStagingDirectory)/thr-step-ca.tar.gz
+  - bash: docker image save thr-step-ca | gzip > $(Build.ArtifactStagingDirectory)/thr-step-ca.tar.gz
 
   - task: PublishBuildArtifacts@1
     inputs:
