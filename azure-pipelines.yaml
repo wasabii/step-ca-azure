@@ -22,14 +22,14 @@ jobs:
   - checkout: self
     clean: true
     fetchDepth: 1
-    
+
   - task: DotNetCoreCLI@2
     inputs:
       command: 'restore'
 
   - task: VSBuild@1
     inputs:
-      solution: TexasHealth.Azure.Infrastructure.StepCa.sln
+      solution: TexasHealth.Azure.Infrastructure.StepCA.sln
       vsVersion: latest
       platform: '$(BuildPlatform)'
       configuration: '$(BuildConfiguration)'
