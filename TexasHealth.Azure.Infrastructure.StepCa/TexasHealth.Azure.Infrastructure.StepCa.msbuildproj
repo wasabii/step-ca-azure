@@ -8,7 +8,6 @@
     <None Include="Dockerfile" />
     <None Include="ca.json" />
     <None Include="init.sh" />
-    <None Include="the-step-ca.yaml" />
   </ItemGroup>
   <Target Name="DockerBuild" BeforeTargets="GetCopyToOutputDirectoryItems">
     <Exec Command="docker image build . -t thr-step-ca" />
