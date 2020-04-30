@@ -1,8 +1,18 @@
 #!/bin/bash
-set -e 
+set -e
+
+if [ -z "${STEPPATH}" ]; then
+    echo "Missing STEPPATH environment variable."
+    exit 1
+fi
 
 if [ -z "${DNS_NAME}" ]; then
     echo "Missing DNS_NAME environment variable."
+    exit 1
+fi
+
+if [ -z "${PORT}" ]; then
+    echo "Missing PORT environment variable."
     exit 1
 fi
 
