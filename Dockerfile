@@ -12,6 +12,7 @@ RUN  \
      dos2unix /step/init.sh && \
      dos2unix /step/ca.json && \
      dos2unix /step/defaults.json && \
+     chmod +x /setp/init.sh && \
      apk del dos2unix && rm -rf /var/cache/apk/*
 USER step
 ENV  STEPPATH=/home/step
