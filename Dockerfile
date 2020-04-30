@@ -19,6 +19,7 @@ ENV  STEPPATH=/home/step
 ENV  PORT=443
 ENV  DNS_NAME=
 ENV  CA_NAME=
-ENV  CA_SECRET_ID=
+ENV  CA_ROOT=
+ENV  CA_ROOT_KEYVAULTID=
 ENV  DELAY=0
 CMD  /bin/sh -c "sleep $DELAY && /step/init.sh && /usr/local/bin/step-ca $STEPPATH/config/ca.json"

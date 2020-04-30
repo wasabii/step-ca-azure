@@ -11,30 +11,34 @@ if [ -z "${CA_NAME}" ]; then
     exit 1
 fi
 
-if [ -z "${CA_SECRET_ID}" ]; then
-    echo "Missing CA_SECRET_ID environment variable."
-    exit 1
-fi
-
 # add directories
 mkdir -p $STEPPATH/certs
 mkdir -p $STEPPATH/secrets
 mkdir -p $STEPPATH/config
 mkdir -p $STEPPATH/db
 
-# download managed identity token
-curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net' -H 'Metadata: true' 2> /dev/null | jq -r '.access_token' > /tmp/token
-TOKEN=$(cat /tmp/token)
-rm /tmp/token
-if [ -z "${TOKEN}" ]; then
-    echo "Could not acquire Azure Managed Identity token."
-    exit 1
+# if a keyvault secret is specified use that to obtain token with MSI authentication
+if [ ! -z "$CA_ROOT_KEYVAULTID" ]; then
+    curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net' -H 'Metadata: true' 2> /dev/null | jq -r '.access_token' > /tmp/token
+    TOKEN=$(cat /tmp/token)
+    rm /tmp/token
+    if [ -z "${TOKEN}" ]; then
+        echo "Could not acquire Azure Managed Identity token."
+        exit 1
+    fi
+
+    # download certificates
+    curl "${CA_ROOT_KEYVAULTID}/?api-version=2016-10-01" -H "Authorization: Bearer $TOKEN" 2> /dev/null | jq -r '.value' | base64 -d > /tmp/ca.pfx
 fi
 
-# download certificates
-curl "${CA_SECRET_ID}/?api-version=2016-10-01" -H "Authorization: Bearer $TOKEN" 2> /dev/null | jq -r '.value' | base64 -d > /tmp/ca.pfx
+# support a CA specified directly
+if [ ! -z "$CA_ROOT" ]; then
+    echo "$CA_ROOT" > /tmp/ca.pfx
+fi
+
+# one or the other has to have worked
 if [ ! -f /tmp/ca.pfx ]; then
-    echo "Missing ca.pfx."
+    echo "Could not find CA_ROOT_KEYVAULTID or CA_ROOT."
     exit 1
 fi
 
