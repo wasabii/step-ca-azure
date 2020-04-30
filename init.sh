@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -e 
 
 if [ -z "${DNS_NAME}" ]; then
     echo "Missing DNS_NAME environment variable."
