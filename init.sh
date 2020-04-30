@@ -56,7 +56,7 @@ fi
 openssl pkcs12 -in /tmp/ca.pfx -cacerts -nodes -nokeys -passin pass: | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > $STEPPATH/certs/root_ca.crt
 openssl pkcs12 -in /tmp/ca.pfx -clcerts -nodes -nokeys -passin pass: | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > $STEPPATH/certs/intermediate_ca.crt
 openssl pkcs12 -in /tmp/ca.pfx -nocerts -nodes -passin pass: | sed -ne '/-BEGIN PRIVATE KEY-/,/-END PRIVATE KEY-/p' > $STEPPATH/secrets/intermediate_ca
-rm /tmp/ca.pfx
+rm -f /tmp/ca.pfx
 
 # update config file
 jq ".dnsNames = [\"${DNS_NAME}\"] |
