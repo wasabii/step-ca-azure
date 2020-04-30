@@ -33,7 +33,7 @@ fi
 
 # support a CA specified directly
 if [ ! -z "$CA_ROOT" ]; then
-    echo "$CA_ROOT" > /tmp/ca.pfx
+    echo "$CA_ROOT" | base64 -d > /tmp/ca.pfx
 fi
 
 # one or the other has to have worked
