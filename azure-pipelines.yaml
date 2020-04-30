@@ -24,6 +24,6 @@ jobs:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)
+      pathToPublish: $(Build.ArtifactStagingDirectory)/thr-step-ca.tar
       artifactType: container
-      artifactName: package
+      artifactName: container
