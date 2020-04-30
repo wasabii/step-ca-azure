@@ -11,7 +11,8 @@ COPY defaults.json /step/defaults.json
 RUN  \
      dos2unix /step/init.sh && \
      dos2unix /step/ca.json && \
-     dos2unix /step/defaults.json
+     dos2unix /step/defaults.json && \
+     apk del dos2unix && rm -rf /var/cache/apk/*
 USER step
 ENV  STEPPATH=/home/step
 ENV  PORT=443
