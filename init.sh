@@ -29,12 +29,27 @@ mkdir -p $STEPPATH/db
 
 # if a keyvault secret is specified use that to obtain token with MSI authentication
 if [ ! -z "$CA_ROOT_KEYVAULTID" ]; then
-    curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net' -H 'Metadata: true' 2> /dev/null | jq -r '.access_token' > /tmp/token
-    TOKEN=$(cat /tmp/token)
-    rm /tmp/token
-    if [ -z "${TOKEN}" ]; then
-        echo "Could not acquire Azure Managed Identity token."
-        exit 1
+    if [ ! -z "$AAD_TENANT_ID" ]; then
+        if [ -z "$AAD_CLIENT_ID" ] | [ -z "$AAD_CLIENT_SECRET" ]; then
+            echo "AAD Tenant ID specified but not client ID or client secret."
+            exit 1
+        fi
+
+        curl -X POST -d "grant_type=client_credentials&client_id=${AAD_CLIENT_ID}&client_secret=${AAD_CLIENT_SECRET}&resource=https%3A%2F%2Fvault.azure.net%2F" https://login.microsoftonline.com/${AAD_TENANT_ID}/oauth2/token | jq -r '.access_token' > /tmp/token
+        TOKEN=$(cat /tmp/token)
+        rm /tmp/token
+        if [ -z "${TOKEN}" ]; then
+            echo "Could not acquire Access Token."
+            exit 1
+        fi
+    elif
+        curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net' -H 'Metadata: true' 2> /dev/null | jq -r '.access_token' > /tmp/token
+        TOKEN=$(cat /tmp/token)
+        rm /tmp/token
+        if [ -z "${TOKEN}" ]; then
+            echo "Could not acquire Azure Managed Identity token."
+            exit 1
+        fi
     fi
 
     # download certificates
