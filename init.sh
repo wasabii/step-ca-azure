@@ -42,7 +42,7 @@ if [ ! -z "$CA_ROOT_KEYVAULTID" ]; then
             echo "Could not acquire Access Token."
             exit 1
         fi
-    elif
+    else
         curl 'http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https%3A%2F%2Fvault.azure.net' -H 'Metadata: true' 2> /dev/null | jq -r '.access_token' > /tmp/token
         TOKEN=$(cat /tmp/token)
         rm /tmp/token
