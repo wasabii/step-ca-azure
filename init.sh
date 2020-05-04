@@ -39,7 +39,7 @@ if [ ! -z "$CA_ROOT_KEYVAULTID" ]; then
         TOKEN=$(cat /tmp/token)
         rm /tmp/token
         if [ -z "${TOKEN}" ]; then
-            echo "Could not acquire Access Token."
+            echo "Could not acquire access token."
             exit 1
         fi
     else
@@ -47,18 +47,19 @@ if [ ! -z "$CA_ROOT_KEYVAULTID" ]; then
         TOKEN=$(cat /tmp/token)
         rm /tmp/token
         if [ -z "${TOKEN}" ]; then
-            echo "Could not acquire Azure Managed Identity token."
+            echo "Could not acquire Managed Identity access token."
             exit 1
         fi
     fi
 
-    # download certificates
-    curl "${CA_ROOT_KEYVAULTID}/?api-version=2016-10-01" -H "Authorization: Bearer $TOKEN" 2> /dev/null | jq -r '.value' | base64 -d > /tmp/ca.pfx
+    # download certificate
+    sid=`curl "${CA_ROOT_KEYVAULTID}?api-version=7.0" -H "Authorization: Bearer $TOKEN" 2> /dev/null | jq -r '.sid'`
+    curl "${sid}?api-version=7.0" -H "Authorization: Bearer $TOKEN" 2> /dev/null | jq -r '.value' | base64 -d > /tmp/ca.pfx
 fi
 
 # support a CA specified directly
 if [ ! -z "$CA_ROOT" ]; then
-    echo "$CA_ROOT" | base64 -d > /tmp/ca.pfx
+    pfx=`echo "$CA_ROOT" | base64 -d > /tmp/ca.pfx
 fi
 
 # one or the other has to have worked
