@@ -19,11 +19,11 @@ jobs:
     clean: true
     fetchDepth: 1
 
-  - bash: docker image build . -t thr-step-ca:$(Build.BuildNumber)
-  - bash: docker image save thr-step-ca:$(Build.BuildNumber) -o $(Build.ArtifactStagingDirectory)/thr-step-ca.tar
+  - bash: docker image build . -t thr-stepca-azure:$(Build.BuildNumber)
+  - bash: docker image save thr-stepca-azure:$(Build.BuildNumber) -o $(Build.ArtifactStagingDirectory)/thr-stepca-azure.tar
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)/thr-step-ca.tar
+      pathToPublish: $(Build.ArtifactStagingDirectory)/thr-stepca-azure.tar
       artifactType: container
-      artifactName: step-ca
+      artifactName: docker
