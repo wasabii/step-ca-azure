@@ -68,6 +68,7 @@ if [ ! -f /tmp/ca.pfx ]; then
     exit 1
 fi
 
+# check that we can successfully read CA bundle
 if ! openssl pkcs12 -info -in /tmp/ca.pfx -nodes -passin pass: ; then
     echo "Cannot read /tmp/ca.pfx: invalid CA."
     exit 1
