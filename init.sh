@@ -68,6 +68,11 @@ if [ ! -f /tmp/ca.pfx ]; then
     exit 1
 fi
 
+if ! openssl pkcs12 -info -in /tmp/ca.pfx -nodes -passin pass: ; then
+    echo "Cannot read /tmp/ca.pfx: invalid CA."
+    exit 1
+fi
+
 # extract certificates
 openssl pkcs12 -in /tmp/ca.pfx -cacerts -nodes -nokeys -passin pass: | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > $STEPPATH/certs/root_ca.crt
 openssl pkcs12 -in /tmp/ca.pfx -clcerts -nodes -nokeys -passin pass: | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > $STEPPATH/certs/intermediate_ca.crt
