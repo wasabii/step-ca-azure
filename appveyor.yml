@@ -4,11 +4,14 @@ environment:
   github_api_key:
     secure: PXVIPFRuQXOM4MVtcXqr4qytcXMHCr0lOYWI9cWzN4Fwazyp9WbCfjavY+l5fZOh
 
+init:
+- sh: appveyor UpdateBuild -Version `date '+%Y%m%d'`
+
 build_script:
-- sh: docker image build . -t step-ca-azure:latest
-- sh: docker image save step-ca-azure:latest -o step-ca-azure.tar
+- sh: docker image build . -t step-ca-azure:$appveyor_build_version
+- sh: docker image save step-ca-azure:$appveyor_build_version -o step-ca-azure.tar
 
 deploy_script:
 - sh: docker login -u wasabii -p $github_api_key docker.pkg.github.com
-- sh: docker tag step-ca-azure:latest docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:latest
-- sh: docker push docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:latest
+- sh: docker tag step-ca-azure:$appveyor_build_version docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:$appveyor_build_version
+- sh: docker push docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:$appveyor_build_version
