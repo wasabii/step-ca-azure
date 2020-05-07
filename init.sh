@@ -35,7 +35,7 @@ if [ ! -z "$CA_ROOT_KEYVAULTID" ]; then
             exit 1
         fi
 
-        curl -X POST -d "grant_type=client_credentials&client_id=${AAD_CLIENT_ID}&client_secret=${AAD_CLIENT_SECRET}&resource=https%3A%2F%2Fvault.azure.net%2F" https://login.microsoftonline.com/${AAD_TENANT_ID}/oauth2/token | jq -r '.access_token' > /tmp/token
+        curl -X POST -d "grant_type=client_credentials&client_id=${AAD_CLIENT_ID}&client_secret=${AAD_CLIENT_SECRET}&resource=https%3A%2F%2Fvault.azure.net" https://login.microsoftonline.com/${AAD_TENANT_ID}/oauth2/token | jq -r '.access_token' > /tmp/token
         TOKEN=$(cat /tmp/token)
         rm /tmp/token
         if [ -z "${TOKEN}" ]; then
@@ -69,7 +69,7 @@ if [ ! -f /tmp/ca.pfx ]; then
 fi
 
 # check that we can successfully read CA bundle
-if ! openssl pkcs12 -info -in /tmp/ca.pfx -nodes -passin pass: ; then
+if ! openssl pkcs12 -in /tmp/ca.pfx -info -nodes -passin pass: ; then
     echo "Cannot read /tmp/ca.pfx: invalid CA."
     exit 1
 fi
