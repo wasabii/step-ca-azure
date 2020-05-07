@@ -5,6 +5,6 @@ build_script:
 - sh: docker image save step-ca-azure:latest -o step-ca-azure.tar
 
 deploy_script:
-- sh: docker login -u wasabii -p xrFuWmVqekabWUvYce7mOmKS4ToqdtFJOGgiLYyrDRVZJhMSMvpOUVxf0mhzwGiH docker.pkg.github.com
+- sh: docker login -u wasabii -p 68d999da20793f4814de4c8690743f9458e1ce8c docker.pkg.github.com
 - sh: docker tag step-ca-azure:latest docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:latest
 - sh: docker push docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:latest
