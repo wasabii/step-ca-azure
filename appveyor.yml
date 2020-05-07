@@ -1,0 +1,19 @@
+image: Ubuntu
+
+script:
+  - bash: docker image build . -t step-ca-azure:latest
+  - bash: docker image save step-ca-azure:latest -o pkg/step-ca-azure.tar
+
+artifacts:
+  - path: pkg\step-ca-azure.tar
+    name: docker
+
+deploy:
+  provider: NuGet
+  server: https://nuget.pkg.github.com/wasabii/index.json
+  username: wasabii
+  api_key:
+    secure: xrFuWmVqekabWUvYce7mOmKS4ToqdtFJOGgiLYyrDRVZJhMSMvpOUVxf0mhzwGiH
+  skip_symbols: false
+  symbol_server:
+  artifact: /.*\.nupkg/

@@ -27,8 +27,10 @@ mkdir -p $STEPPATH/secrets
 mkdir -p $STEPPATH/config
 mkdir -p $STEPPATH/db
 
-# if a keyvault secret is specified use that to obtain token with MSI authentication
+# CA stored in Azure Key Vault
 if [ ! -z "$CA_ROOT_KEYVAULTID" ]; then
+
+    # AAD Tenant ID specified, as opposed to MSI
     if [ ! -z "$AAD_TENANT_ID" ]; then
         if [ -z "$AAD_CLIENT_ID" ] | [ -z "$AAD_CLIENT_SECRET" ]; then
             echo "AAD Tenant ID specified but not client ID or client secret."
