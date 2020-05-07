@@ -1,10 +1,14 @@
 image: Ubuntu
 
+environment:
+  github_api_key:
+    secure: PXVIPFRuQXOM4MVtcXqr4qytcXMHCr0lOYWI9cWzN4Fwazyp9WbCfjavY+l5fZOh
+
 build_script:
 - sh: docker image build . -t step-ca-azure:latest
 - sh: docker image save step-ca-azure:latest -o step-ca-azure.tar
 
 deploy_script:
-- sh: docker login -u wasabii -p dc2b9f1d7a47e8d5ce553c914570a311db7dbc38 docker.pkg.github.com
+- sh: docker login -u wasabii -p $github_api_key docker.pkg.github.com
 - sh: docker tag step-ca-azure:latest docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:latest
 - sh: docker push docker.pkg.github.com/wasabii/step-ca-azure/step-ca-azure:latest
