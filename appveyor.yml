@@ -2,10 +2,10 @@ image: Ubuntu
 
 build_script:
 - sh: docker image build . -t step-ca-azure:latest
-- sh: docker image save step-ca-azure:latest -o pkg/step-ca-azure.tar
+- sh: docker image save step-ca-azure:latest -o step-ca-azure.tar
 
 artifacts:
-- path: pkg\step-ca-azure.tar
+- path: step-ca-azure.tar
   name: docker
 
 deploy:
